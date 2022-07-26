@@ -1,0 +1,4 @@
+-restart button
+-fix bugs
+-implement accuracy?
+-find api with more common words or just switch to storing words locally inside app
