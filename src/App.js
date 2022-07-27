@@ -68,6 +68,7 @@ function App() {
     }, [currentWord]);
 
     useEffect(() => {
+	console.log(strokes)
 	    if (
 		    currentWord !== "" 
 		    && formValue[currentCharPosition] === currentWord[currentCharPosition] 
@@ -105,8 +106,16 @@ function App() {
 	    ) {
 		    setMistake(true);
 		    setStrokes(strokes + 1);
-	    } else if (mistake) {
-		    setStrokes(strokes + 1)
+	    } else if (
+		mistake
+		&& formValue[currentCharPosition] !== currentWord[currentCharPosition]
+		&& currentCharPosition === formValue.length
+	    ) {
+		setMistake(false);
+		setStrokes(strokes + 1);
+	    } else if (currentCharPosition > formValue.length) {
+		setCurrentCharPosition(currentCharPosition -1);
+		setStrokes(strokes + 1);
 	    }
     }, [formValue])
 
