@@ -12,7 +12,6 @@ function App() {
     const [formValue, setFormValue] = useState("");
     const [currentWord, setCurrentWord] = useState("");
     const [currentWordPosition, setCurrentWordPosition] = useState(0);
-    const [currentChar, setCurrentChar] = useState("");
     const [currentCharPosition, setCurrentCharPosition] = useState(0);
     const [mistake, setMistake] = useState(false);
     const [finished, setFinished] = useState(false);
@@ -27,7 +26,6 @@ function App() {
 	document.getElementById("input").value = "";
 	setCurrentWord("");
 	setCurrentWordPosition(0);
-	setCurrentChar("");
 	setCurrentCharPosition(0);
 	setMistake(false);
 	setFinished(false);
@@ -65,13 +63,44 @@ function App() {
 	    }
     }, [words]);
 
-    useEffect(() => {
-	    if (currentWord !== "") {
-		    setCurrentChar(currentWord[0]);
-	    } 	
-    }, [currentWord]);
+    function newCharacterCorrect() {
+	setCurrentCharPosition(currentCharPosition + 1);
+    }
 
-    useEffect(() => {
+    function endOfWordCorrect() {
+	document.getElementById("input").value = "";
+	setCurrentWord(words[currentWordPosition + 1]);
+	setCurrentWordPosition(currentWordPosition + 1);
+	setCurrentCharPosition(0);
+	setFormValue("");
+    }
+
+    function finishedCorrect() {
+	document.getElementById("input").value = "";
+	setCurrentWord("done");
+	setCurrentWordPosition(-1);
+	setCurrentCharPosition(-1);
+	setFinishedTime(new Date());
+	setFinished(true);
+    }
+
+    function newCharacterMistake() {
+	setMistake(true);
+	setStrokes(strokes + 1);
+    }
+
+    function newCharacterMistakeCorrection() {
+	setMistake(false);
+	setStrokes(strokes + 1);
+    }
+
+    function backspaceHandlerer() {
+	setCurrentCharPosition(currentCharPosition -1);
+	setStrokes(strokes + 1);
+    }
+
+
+    function handleChange(event) {
 	    if (
 		    currentWord !== "" 
 		    && formValue[currentCharPosition] === currentWord[currentCharPosition] 
@@ -83,23 +112,12 @@ function App() {
 		    setStrokes(strokes + 1);
 		    setMistake(false);
 		    if (currentCharPosition !== currentWord.length - 1) {
-			    setCurrentChar(currentWord[currentCharPosition + 1]);
-			    setCurrentCharPosition(currentCharPosition + 1);
+			newCharacterCorrect();
 		    } else {
 			    if (currentWordPosition !== words.length - 1) {
-				    setCurrentWord(words[currentWordPosition + 1]);
-				    setCurrentWordPosition(currentWordPosition + 1);
-				    setCurrentCharPosition(0);
-				    setFormValue("");
-				    document.getElementById("input").value = "";
+				endOfWordCorrect();
 			    } else {
-				    setCurrentWord("done");
-				    setCurrentWordPosition(-1);
-				    setCurrentChar("");
-				    setCurrentCharPosition(-1);
-				    document.getElementById("input").value = "";
-				    setFinishedTime(new Date());
-				    setFinished(true);
+				finishedCorrect();
 			    }
 		    }
 	    } else if (
@@ -107,22 +125,16 @@ function App() {
 		    && formValue[currentCharPosition] !== currentWord[currentCharPosition]
 		    && formValue[currentCharPosition] !== undefined
 	    ) {
-		    setMistake(true);
-		    setStrokes(strokes + 1);
+		newCharacterMistake();
 	    } else if (
 		mistake
 		&& formValue[currentCharPosition] !== currentWord[currentCharPosition]
 		&& currentCharPosition === formValue.length
 	    ) {
-		setMistake(false);
-		setStrokes(strokes + 1);
+		newCharacterMistakeCorrection();
 	    } else if (currentCharPosition > formValue.length) {
-		setCurrentCharPosition(currentCharPosition -1);
-		setStrokes(strokes + 1);
+		backspaceHandlerer();
 	    }
-    }, [formValue])
-
-    function handleChange(event) {
 	    setFormValue(event.target.value)
     }
 
