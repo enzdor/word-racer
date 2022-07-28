@@ -65,6 +65,8 @@ function App() {
 
     function newCharacterCorrect() {
 	setCurrentCharPosition(currentCharPosition + 1);
+	console.log(currentCharPosition)
+	console.log("helo")
     }
 
     function endOfWordCorrect() {
@@ -99,8 +101,7 @@ function App() {
 	setStrokes(strokes + 1);
     }
 
-
-    function handleChange(event) {
+    useEffect(() => {
 	    if (
 		    currentWord !== "" 
 		    && formValue[currentCharPosition] === currentWord[currentCharPosition] 
@@ -135,6 +136,12 @@ function App() {
 	    } else if (currentCharPosition > formValue.length) {
 		backspaceHandlerer();
 	    }
+
+	console.log(currentCharPosition)
+    }, [formValue])
+
+
+    function handleChange(event) {
 	    setFormValue(event.target.value)
     }
 
