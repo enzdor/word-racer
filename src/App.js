@@ -20,8 +20,11 @@ function App() {
     const [strokes, setStrokes] = useState(0);
     const [startTime, setStartTime] = useState(0);
     const [finishedTime, setFinishedTime] = useState(0);
+    const [resetting, setResetting] = useState(false);
 
     function reset() {
+	setResetting(true);
+	document.getElementById("input").value = "";
 	setCurrentWord("");
 	setCurrentWordPosition(0);
 	setCurrentChar("");
@@ -33,6 +36,7 @@ function App() {
 	setStartTime(0);
 	setFinishedTime(0);
 	shuffleArray(newWords);
+	setResetting(false);
     }
 
     function shuffleArray(array) {
@@ -68,7 +72,6 @@ function App() {
     }, [currentWord]);
 
     useEffect(() => {
-	console.log(strokes)
 	    if (
 		    currentWord !== "" 
 		    && formValue[currentCharPosition] === currentWord[currentCharPosition] 
@@ -83,7 +86,13 @@ function App() {
 			    setCurrentChar(currentWord[currentCharPosition + 1]);
 			    setCurrentCharPosition(currentCharPosition + 1);
 		    } else {
-			    if (currentWordPosition === words.length - 1) {
+			    if (currentWordPosition !== words.length - 1) {
+				    setCurrentWord(words[currentWordPosition + 1]);
+				    setCurrentWordPosition(currentWordPosition + 1);
+				    setCurrentCharPosition(0);
+				    setFormValue("");
+				    document.getElementById("input").value = "";
+			    } else {
 				    setCurrentWord("done");
 				    setCurrentWordPosition(-1);
 				    setCurrentChar("");
@@ -91,12 +100,6 @@ function App() {
 				    document.getElementById("input").value = "";
 				    setFinishedTime(new Date());
 				    setFinished(true);
-			    } else {
-				    setCurrentWord(words[currentWordPosition + 1]);
-				    setCurrentWordPosition(currentWordPosition + 1);
-				    setCurrentCharPosition(0);
-				    setFormValue("");
-				    document.getElementById("input").value = "";
 			    }
 		    }
 	    } else if (
@@ -133,18 +136,53 @@ function App() {
 			words.map(word => {
 			    if (currentWord === word) {
 				if (!mistake) {
+				    const wordArray = [];
+				    for (let i = 0; i < word.length; i++) {
+					wordArray.push(word[i]);
+				    }
 				    return (
 					<Typography 
 					    variant="h4" 
 					    key={word} 
 					    style={{color: "green", marginRight: "1rem"}}
 					>
-					    {word}
+					    {wordArray.map((letter, i)=> {
+						if (i === currentCharPosition) {
+						    return (
+							<span key={i} className="current-letter-correct"><span className="current-bar-correct"></span>{letter}</span>
+						    )
+						} else {
+						    return (
+							<span key={i}>{letter}</span>
+						    )
+						}
+					    })}
 					</Typography>
 				    )
 				} else {
+				    const wordArray = [];
+				    for (let i = 0; i < word.length; i++) {
+					wordArray.push(word[i]);
+				    }
 				    return (
-					<Typography variant="h4" key={word} style={{color: "red", marginRight: "1rem"}}>{word}</Typography>
+					<Typography 
+					    variant="h4" 
+					    key={word} 
+					    style={{color: "red", marginRight: "1rem"}}
+					>
+					    {wordArray.map((letter, i)=> {
+						if (i === currentCharPosition) {
+						    return (
+							<span key={i} className="current-letter-mistake"><span className="current-bar-mistake"></span>{letter}</span>
+						    )
+						} else {
+						    return (
+							<span key={i}>{letter}</span>
+						    )
+						}
+					    })}
+
+					</Typography>
 				    )
 				}
 			    } else {
@@ -165,7 +203,7 @@ function App() {
 	    </Card>
 	    <TextField label="Type here..." error={mistake} fullWidth onChange={handleChange} disabled={finished} id="input"/>
 	    <Typography variant="h4" color="primary" sx={{my: 3}}>{finished ? "wpm " + (strokes / 5) / (((finishedTime - startTime) / 1000) / 60) : <></>}</Typography>
-	    <Button variant="contained" onClick={() => reset()}>Restart</Button>
+	    <Button variant="contained" onClick={() => reset()} disabled={resetting}>Restart</Button>
 	</Container>
     )
 }
