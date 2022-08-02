@@ -76,13 +76,13 @@ function App() {
 	    setFinishedTime(new Date);
 	    setFinished(true)
 	}
-	console.log(typedWords + event.target.value[event.target.value.length - 1])
-	console.log(allWords.slice(0, (typedWords + event.target.value[event.target.value.length - 1]).length))
 
 	if (typedWords.split(" ")[typedWords.split(" ").length - 1].length <= event.target.value.length) {
-	    if (typedWords + event.target.value[event.target.value.length - 1] !== allWords.slice(0, (typedWords + event.target.value[event.target.value.length - 1]).length)) {
+	    if (typedWords + event.target.value[event.target.value.length - 1] !== allWords.slice(0, (typedWords + event.target.value[event.target.value.length - 1]).length) || event.target.value.trim() !== allWords.split(" ")[typedWords.split(" ").length - 1].slice(0, event.target.value.length)) {
 		setCorrect(false);
 	    } else {
+		if (!correct) {
+		}
 		setCorrect(true);
 		setTypedWords(typedWords + event.target.value[event.target.value.length - 1]);
 		if (event.target.value[event.target.value.length - 1] === " ") {
@@ -92,16 +92,14 @@ function App() {
 	} else {
 	    if (event.target.value === typedWords.split(" ")[typedWords.split(" ").length - 1].slice(0, event.target.value.length)){
 		setTypedWords(typedWords.slice(0, -1));
-	    } else {
-		console.log("hello")
-	    }
+	    } 
 	}
 
     }
 
     return (
 	<Container maxWidth="lg">
-	    <Typography variant="h3" color="primary" sx={{mt: 3}}>word racer</Typography>
+	    <Typography variant="h3" color="primary" sx={{mt: 3, cursor: "pointer"}}>word racer</Typography>
 	    <Card variant="outlined" sx={{my: 3}}>
 		<Container sx={{display: "flex", flexWrap: "wrap"}}>
 		    {allWords.length > 1 
