@@ -32,3 +32,4 @@ If there were no problems, the website should be running on port 3000.
 ## To-do
 
 - Make it possible for users to select how many words they want to type.
+- Add favicon.
