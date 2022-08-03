@@ -1,3 +1,0 @@
--fix bugs
-	- make function simpler/faster
--implement accuracy?
