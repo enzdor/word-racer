@@ -45,6 +45,7 @@ function App() {
 
     useEffect(() => {
 	shuffleArray(newWords);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     },[])
 
     useEffect(() => {
@@ -58,7 +59,6 @@ function App() {
 		}
 		setAllWords(string)
 	    }
-
     }, [words]);
 
 
