@@ -12,7 +12,6 @@ function App() {
     const [correct, setCorrect] = useState(true);
     const [allWords, setAllWords] = useState("");
     const [finished, setFinished] = useState(false);
-    const [start, setStart] = useState(false);
     const [strokes, setStrokes] = useState(0);
     const [startTime, setStartTime] = useState(0);
     const [finishedTime, setFinishedTime] = useState(0);
@@ -21,7 +20,6 @@ function App() {
     function reset() {
 	setResetting(true);
 	setFinished(false);
-	setStart(false);
 	setStrokes(0);
 	setCorrect(true);
 	setTypedWords("");
@@ -67,13 +65,11 @@ function App() {
 
     function handleChange(event) {
 	if (strokes === 0) {
-	    setStart(true)
-	    setStartTime(new Date);
+	    setStartTime(new Date());
 	}
-	setStrokes(strokes + 1);
 
 	if (typedWords + event.target.value[event.target.value.length - 1] === allWords) {
-	    setFinishedTime(new Date);
+	    setFinishedTime(new Date());
 	    setFinished(true)
 	}
 
@@ -81,8 +77,7 @@ function App() {
 	    if (typedWords + event.target.value[event.target.value.length - 1] !== allWords.slice(0, (typedWords + event.target.value[event.target.value.length - 1]).length) || event.target.value.trim() !== allWords.split(" ")[typedWords.split(" ").length - 1].slice(0, event.target.value.length)) {
 		setCorrect(false);
 	    } else {
-		if (!correct) {
-		}
+		setStrokes(strokes + 1);
 		setCorrect(true);
 		setTypedWords(typedWords + event.target.value[event.target.value.length - 1]);
 		if (event.target.value[event.target.value.length - 1] === " ") {
